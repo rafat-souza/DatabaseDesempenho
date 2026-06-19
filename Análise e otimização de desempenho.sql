@@ -15,3 +15,19 @@ CREATE INDEX idx_produtos_categoria ON produtos (categoria_id);
 CREATE INDEX idx_itens_produto ON itens_pedido (produto_id);
 CREATE INDEX idx_itens_pedido ON itens_pedido (pedido_id);
 CREATE INDEX idx_clientes_cpf ON clientes (cpf);
+
+-- Consulta para verificar pedidos pendente no ano atual sem otimização
+SELECT * FROM pedidos 
+p JOIN clientes c ON p.cliente_id = c.id 
+WHERE YEAR(p.data_pedido) = 2026 
+AND p.status = 'PENDENTE';
+
+-- Consulta otimizada implementada no sistema, resgatando apenas colunas necessárias:
+SELECT p.id, p.data_pedido, p.valor_total, c.nome, c.email
+FROM pedidos p
+INNER JOIN clientes c ON p.cliente_id = c.id
+WHERE p.data_pedido >= '2026-01-01 00:00:00' 
+  AND p.data_pedido <= '2026-12-31 23:59:59'
+  AND p.status = 'PENDENTE';
+  
+  
